@@ -1,0 +1,73 @@
+<?php
+
+// -- DEPENDENCIES
+require_once(dirname(__FILE__)."/../access_layer/User.php");
+
+// -- CONSTANTS
+defined("OPERATION_KEY") ? null : define("OPERATION_KEY", "op");
+defined("TABLE_KEY") ? null : define("TABLE_KEY", "table");
+defined("PARAMS_KEY") ? null : define("PARAMS_KEY", "json_params");
+
+// Table fields
+$USER_FIELDS = array(
+  User::ID_DB_KEY,
+  User::FBID_DB_KEY,
+  User::USERNAM_DB_KEY,
+  User::FIRSTNAME_DB_KEY,
+  User::LASTNAME_DB_KEY,
+  User::BIRTHDATE_DB_KEY,
+  User::SEX_DB_KEY,
+  User::BALANCE_DB_KEY,
+  User::ISADMIN_DB_KEY);
+
+// -- FUNCTIONS
+function userSelectTable() {
+  echo "-- Select table to modify: \n";
+  echo "\t - Options: Users, Teams, Seasons, Games, Bets, UserBets, Friends\n";
+  echo "\t - Table: ";
+  $table_name = readline();
+  echo "\n";
+}
+
+function userSelectCreateParams($col_names) {
+  $params = array();
+  foreach ($col_names as $col_name) {
+  
+  }
+}
+
+function tableCreate($table_name) {
+
+  $params = null; 
+  switch ($table_name) {
+    case "Users":
+      
+      break;
+  }
+}
+
+function userSelectOperationType() {
+  echo "-- Select operation to perform: \n";
+  echo "\t - Options: create, read, update, delete\n";
+  echo "\t - Operation: ";
+  $operation_type = readline();
+  echo "\n";
+}
+
+while (1) {
+  // Table name
+  $table_name = userSelectTable();
+
+  // Operation type
+  $operation_type = userSelectOperationType();
+
+  switch ($operation_type) {
+  case "create":
+    tableCreate($table_name);
+    break;
+  default:
+    die("ERROR: invalid operaiton-type: " . $operation_type);
+    break;  
+  }
+}
+
