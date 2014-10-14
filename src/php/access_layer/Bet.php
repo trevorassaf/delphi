@@ -40,13 +40,15 @@ class Bet extends DatabaseObject {
       $cancellationPenalty,
       $status) {
     return static::createObject(
-      self::GAMEID_DB_KEY => $gameId,
-      self::TEAMID_DB_KEY => $teamId,
-      self::BETTINGUSERID_DB_KEY => $bettingUserId,
-      self::BETTINGUSERHANDICAP_DB_KEY => $getBettingUserHandicap,
-      self::wager => $wager,
-      self::CANCELLATIONPENALTY_DB_KEY => $cancellationPenalty,
-      self::STATUS_DB_KEY => $status,
+      array(
+        self::GAMEID_DB_KEY => $gameId,
+        self::TEAMID_DB_KEY => $teamId,
+        self::BETTINGUSERID_DB_KEY => $bettingUserId,
+        self::BETTINGUSERHANDICAP_DB_KEY => $getBettingUserHandicap,
+        self::wager => $wager,
+        self::CANCELLATIONPENALTY_DB_KEY => $cancellationPenalty,
+        self::STATUS_DB_KEY => $status,
+      )
     ); 
   }
 
@@ -54,7 +56,7 @@ class Bet extends DatabaseObject {
     return static::getObjectByUniqueKeys(self::ID_DB_KEY, $id);
   }
 
-  public static function getPrimaryKeys() {
+  protected function getPrimaryKeys() {
     return array(self::ID_DB_KEY => $this->id);
   }
 

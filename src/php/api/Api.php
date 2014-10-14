@@ -4,19 +4,19 @@
 
 abstract class ApiRequest {
 
-  private
+  protected
     $isValidResult,
     $resultMode;
 
   public function __construct() {
-    $this->isValidResult = false;
+    $this->isValidResponse = false;
     $this->resultMode = null;
   }
 
   abstract function process();
 
-  public function isValidResult() {
-    return $this->isValidResult;
+  public function isValidResponse() {
+    return $this->isValidResponse;
   }
 
   public function getResultMode() {

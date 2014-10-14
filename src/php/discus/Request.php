@@ -29,6 +29,7 @@ class Request {
       $this->type => $this->params, 
     );
     $request_context = stream_context_create($context_options);
+    var_dump($this->url);
     return file_get_contents($this->url, null, $request_context);
   }
 }

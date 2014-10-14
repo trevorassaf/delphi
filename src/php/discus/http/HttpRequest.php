@@ -105,22 +105,27 @@ class HttpRequestBuilder {
   // -- PUBLIC FUNCTIONS
   public function setMethod($method) {
     $this->method = $method;
+    return $this;
   }
 
   public function setHeader($header) {
     $this->header = $header;
+    return $this;
   }
 
   public function userAgent($user_agent) {
     $this->userAgent = $user_agent;
+    return $this;
   }
 
   public function setProxy($proxy) {
     $this->proxy = $proxy;
+    return $this;
   }
 
   public function setContent($content) {
     $this->content = $content;
+    return $this;
   }
 
   public function setContentParam($key, $value) {
@@ -129,6 +134,7 @@ class HttpRequestBuilder {
     }
 
     $this->content[$key] = $value;
+    return $this;
   }
 
   public function isContentParamSet($key) {
@@ -157,29 +163,36 @@ class HttpRequestBuilder {
 
   public function setRequestFulluri($requestFulluri) {
     $this->requestFulluri = $requestFulluri;
+    return $this;
   }
 
   public function setFollowLocation($follow_location) {
     $this->followLocation = $follow_location;
+    return $this;
   }
 
   public function setMaxRedirects($max_redirects) {
     $this->maxRedirects = $max_redirects;
+    return $this;
   }
 
   public function setProtocolVersion($protocolVersion) {
     $this->protocolVersion = $protocolVersion;
+    return $this;
   }
 
   public function setTimeout($timeout) {
     $this->timeout = $timeout;
+    return $this;
   }
 
   public function setIgnoreErrors($ignoreErrors) {
     $this->ignoreErrors = $ignoreErrors;
+    return $this;
   }
 
   public function setUrl($url) {
     $this->url = $url;
+    return $this;
   }
 }

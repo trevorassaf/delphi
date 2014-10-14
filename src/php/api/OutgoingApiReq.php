@@ -3,7 +3,7 @@
 // -- DEPENDENCIES
 require_once(dirname(__FILE__)."/ApiRequest.php");
 
-abstract class OutgointApiReq extends ApiRequest {
+abstract class OutgoingApiReq extends ApiRequest {
 
   private $request;
 
@@ -15,11 +15,8 @@ abstract class OutgointApiReq extends ApiRequest {
   public function process() {
     // Perform request and process response
     $response = $this->request->execute();    
-    $this->validateResponse($response);
-    $this->cacheResponseData($response);
+    $this->validateAndCacheResponse($response);
   }
 
-  protected abstract function validateResponse($response);
-
-  protected abstract cacheResponseData($response);
+  protected abstract function validateAndCacheResponse($response);
 }
