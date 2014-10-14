@@ -13,12 +13,15 @@ class CurrentSeasonYearApi extends FantasyFootballApi {
   
   const METHOD_NAME = "CurrentSeason";
 
+  private $year;
+
   protected function validateAndCacheResponse($response) {
     if (!is_numeric($response)) {
       $this->resultMode = CurrentSeasonYearResultModeApi::INVALID_RESPONSE;
       return false;   
     }
 
+    $this->year = (int)$response;
     $this->resultMode = CurrentSeasonYearResultModeApi::VALID_RESPONSE;
     return true;
   }
@@ -28,6 +31,6 @@ class CurrentSeasonYearApi extends FantasyFootballApi {
   }
 
   public function getCurrentSeasonYear() {
-    return $this->currentSeasonYear;
+    return $this->year;
   }
 }

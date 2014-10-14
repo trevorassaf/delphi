@@ -71,7 +71,7 @@ final class SchedulesResult {
     $this->overUnder = $over_under;
   }
 
-  public function getAwayTeam() {
+  public function getAwayTeamKey() {
     return $this->awayTeam;
   }
 
@@ -79,7 +79,7 @@ final class SchedulesResult {
     return $this->date;
   }  
 
-  public function getHomeTeam() {
+  public function getHomeTeamKey() {
     return $this->homeTeam;
   }
 
@@ -105,13 +105,11 @@ class SchedulesApi extends FantasyFootballApi {
   const METHOD_NAME = "Schedules";
 
   private
-    $yearNum,
-    $seasonSuffix,
+    $seasonKey,
     $resultArray;
 
-  public function __construct($year_num, $season_suffix) {
-    $this->yearNum = $year_num;
-    $this->seasonSuffix = $season_suffix;    
+  public function __construct($season_key) {
+    $this->seasonKey = $season_key;
     parent::__construct();
   }
 
@@ -119,7 +117,7 @@ class SchedulesApi extends FantasyFootballApi {
     try {
       $this->resultArray = SchedulesResult::createFromJsonString($response);
     } catch (Exception $e) {
-      $this->resultMode = SchedulesResultMode::SUCCESSFUL_RESP;
+      $this->resultMode = SchedulesResultMode::INVALID_RESP;
       return false;
     }
 
@@ -128,13 +126,14 @@ class SchedulesApi extends FantasyFootballApi {
   }
 
   protected function genUrlSuffix() {
-    $year_season_str = 
-        FantasyFootballApi::genSeasonQueryString(
-          $this->yearNum, $this->seasonSuffix);
-    return self::METHOD_NAME . "/" . $year_season_str;
+    return self::METHOD_NAME . "/" . $this->seasonKey;
   }
 
   public function getResultArray() {
     return $this->resultArray;
+  }
+
+  public function getSeasonKey() {
+    return $this->seasonKey;
   }
 }

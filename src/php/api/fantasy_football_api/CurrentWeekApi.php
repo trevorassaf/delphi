@@ -39,7 +39,7 @@ class CurrentWeekApi extends FantasyFootballApi {
     $this->isRegularSeason = $this->weekNum > self::MAX_REGULAR_SEASON_WEEK_NUM;
   }
 
-  protected abstract function genUrlSuffix() {
+  protected function genUrlSuffix() {
     return self::METHOD_NAME;
   }
 

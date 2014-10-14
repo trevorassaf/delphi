@@ -1,95 +1,106 @@
 <?php
 
 // -- DEPENDENCIES
-require_once(dirname(__FILE__)."/warehouse/DatabaseObject.php");
+require_once(dirname(__FILE__)."/DelphiObject.php");
 
-class Team extends DatabaseObject {
+class Team extends DelphiObject {
 // -- CLASS CONSTANTS
   const TEAM_TABLE_NAME = "Teams";
-  const ID_DB_KEY = "id";
   const NAME_DB_KEY = "name";
+  const FULL_NAME_DB_KEY = "full_name";
   const CITY_DB_KEY = "city";
-  const CITYABBREVIATION_DB_KEY = "cityAbbreviation";
-  const STATE_DB_KEY = "state";
+  const KEY_DB_KEY = "team_key";
+  const DIVISION_DB_KEY = "division";
+  const CONFERENCE_DB_KEY = "conference";
+  const SEASON_DB_KEY = "season_key";
 
   // -- CLASS VARS
   protected static $tableName = self::TEAM_TABLE_NAME;
 
-  protected static $uniqueKeys = array(self::ID_DB_KEY, self::NAME_DB_KEY);
+  protected static $uniqueKeys = array(
+    DelphiObject::ID_KEY,
+    self::NAME_DB_KEY,
+    self::FULL_NAME_DB_KEY,
+    self::KEY_DB_KEY,
+  );
 
 // -- INSTANCE VARS	
   private
-    $id,
     $name,
+    $fullName,
     $city,
-    $cityAbbreviation,
-    $state;
+    $key,
+    $division,
+    $conference,
+    $season;
 
   public static function create(
       $name,
+      $fullName,
       $city,
-      $cityAbbreviation,
-      $state) {
-    return static::createObject(
-      array(
-        self::NAME_DB_KEY => $name,
-        self::CITY_DB_KEY => $city,
-        self::CITYABBREVIATION_DB_KEY => $cityAbbreviation,
-        self::STATE_DB_KEY => $state,
-      )
-    );
+      $key,
+      $division,
+      $conference,
+      $season) {
+    $create_vars = static::createFundamentalVars();  
+    $create_vars[self::NAME_DB_KEY] = $name;
+    $create_vars[self::FULL_NAME_DB_KEY] = $fullName;
+    $create_vars[self::CITY_DB_KEY] = $city;
+    $create_vars[self::KEY_DB_KEY] = $key;
+    $create_vars[self::DIVISION_DB_KEY] = $division;
+    $create_vars[self::CONFERENCE_DB_KEY] = $conference;
+    $create_vars[self::SEASON_DB_KEY] = $season;
+    return static::createObject($create_vars); 
   }
 
-  public static function fetchByName($name) {
-    return static::getObjectByUniqueKey(self::NAME_DB_KEY, $name);
-  }
-
-  public static function fetchById($id) {
-    return static::getObjectByUniqueKey(self::ID_DB_KEY, $id);
-  }
-
-  protected function getPrimaryKeys() {
-    return array(self::ID_DB_KEY => $this->id);
-  }
-
-  protected function createObjectCallback($init_params) {
-    $id = mysql_insert_id();
-    $init_params[self::ID_DB_KEY] = $id;
-    return $init_params;
-  }
-
-  protected function initInstanceVars($params) {
-    $this->id = $params[self::ID_DB_KEY];	
+  protected function initAuxillaryInstanceVars($params) {
     $this->name = $params[self::NAME_DB_KEY];	
+    $this->fullName = $params[self::FULL_NAME_DB_KEY];
     $this->city = $params[self::CITY_DB_KEY];	
-    $this->cityAbbreviation = $params[self::CITYABBREVIATION_DB_KEY];	
-    $this->state = $params[self::STATE_DB_KEY];	
+    $this->key = $params[self::KEY_DB_KEY];
+    $this->division = $params[self::DIVISION_DB_KEY];
+    $this->conference = $params[self::CONFERENCE_DB_KEY];
+    $this->season = $params[self::SEASON_DB_KEY];
   }
 
-  protected function getDbFields() {
+  protected function getAuxillaryDbFields() {
     return array(
-        self::ID_DB_KEY => $this->id,
-        self::NAME_DB_KEY => $this->name,
-        self::CITY_DB_KEY => $this->city,
-        self::CITYABBREVIATION_DB_KEY => $this->cityAbbreviation,
-        self::STATE_DB_KEY => $this->state,
+      self::NAME_DB_KEY => $this->name,
+      self::FULL_NAME_DB_KEY => $this->fullName,
+      self::CITY_DB_KEY => $this->city,
+      self::KEY_DB_KEY => $this->key,
+      self::DIVISION_DB_KEY => $this->division,
+      self::CONFERENCE_DB_KEY => $this->conference,
+      self::SEASON_DB_KEY => $this->season,
     );
   } 
 
   // -- Getters
-  public function getId() { 
-		return $this->id;
-	}
   public function getName() { 
 		return $this->name;
 	}
+
+  public function getFullName() {
+    return $this->fullName;
+  }
+
   public function getCity() { 
 		return $this->city;
 	}
-  public function getCityAbbreviation() { 
-		return $this->cityAbbreviation;
-	}
-  public function getState() { 
-		return $this->state;
-	}
+
+  public function getTeamKey() {
+    return $this->key;
+  }
+
+  public function getDivision() {
+    return $this->division;
+  }
+
+  public function getConference() {
+    return $this->conference;
+  }
+
+  public function getSeasonKey() {
+    return $this->season;
+  }
 }

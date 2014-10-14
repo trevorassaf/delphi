@@ -1,12 +1,11 @@
 <?php
 
 // -- DEPENDENCIES
-require_once(dirname(__FILE__)."/warehouse/DatabaseObject.php");
+require_once(dirname(__FILE__)."/DelphiObject");
 
-class Season extends DatabaseObject {
+class Season extends DelphiObject {
 // -- CLASS CONSTANTS
   const SEASON_TABLE_NAME = "Seasons";
-  const ID_DB_KEY = "id";
   const TEAMID_DB_KEY = "teamId";
   const WINS_DB_KEY = "wins";
   const LOSSES_DB_KEY = "losses";
@@ -22,11 +21,8 @@ class Season extends DatabaseObject {
   // -- CLASS VARS
   protected static $tableName = self::SEASON_TABLE_NAME;
 
-  protected static $uniqueKeys = array(self::ID_DB_KEY);
-
 // -- INSTANCE VARS	
   private
-    $id,
     $teamId,
     $wins,
     $losses,
@@ -60,22 +56,7 @@ class Season extends DatabaseObject {
     );
   }
 
-  public static function fetchByTeamId($id) {
-    return static::getObjectByUniqueKeys(self::ID_DB_KEY, $id);
-  }
-
-  protected function getPrimaryKeys() {
-    return array(self::ID_DB_KEY => $this->id);
-  }
-
-  protected function createObjectCallback($init_params) {
-    $id = mysql_insert_id();
-    $init_params[self::ID_DB_KEY] = $id;
-    return $init_params;
-  }
-
-  protected function initInstanceVars($params) {
-    $this->id = $params[self::ID_DB_KEY];	
+  protected function initAuxillaryInstanceVars($params) {
     $this->teamId = $params[self::TEAMID_DB_KEY];	
     $this->wins = $params[self::WINS_DB_KEY];	
     $this->losses = $params[self::LOSSES_DB_KEY];	
@@ -83,9 +64,8 @@ class Season extends DatabaseObject {
     $this->gamesPlayed = $params[self::GAMESPLAYED_DB_KEY];	
   }
 
-  protected function getDbFields() {
+  protected function getAuxillaryDbFields() {
     return array(
-        self::ID_DB_KEY => $this->id,
         self::TEAMID_DB_KEY => $this->teamId,
         self::WINS_DB_KEY => $this->wins,
         self::LOSSES_DB_KEY => $this->losses,
@@ -95,9 +75,6 @@ class Season extends DatabaseObject {
   } 
 
   // -- Getters
-  public function getId() { 
-		return $this->id;
-	}
   public function getTeamId() { 
 		return $this->teamId;
 	}

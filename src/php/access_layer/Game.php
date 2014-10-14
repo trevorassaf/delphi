@@ -1,30 +1,35 @@
 <?php
 
 // -- DEPENDENCIES
-require_once(dirname(__FILE__)."/warehouse/DatabaseObject.php");
+require_once(dirname(__FILE__)."/DelphiObject.php");
 
-class Game extends DatabaseObject {
+abstract class GameStatus {
+
+  const SCHEDULED = "scheduled"; 
+  const COMPLETED = "completed";
+  const IN_PROGRESS = "in_progress";
+  const CANCELLED = "cancelled";
+  const RESCHEDULED = "rescheduled";
+}
+
+class Game extends DelphiObject {
 // -- CLASS CONSTANTS
   const GAME_TABLE_NAME = "Games";
-  const ID_DB_KEY = "id";
   const DATE_DB_KEY = "date";
-  const HOMETEAMID_DB_KEY = "homeTeamId";
-  const AWAYTEAMID_DB_KEY = "awayTeamId";
+  const HOMETEAMID_DB_KEY = "homeTeamKey";
+  const AWAYTEAMID_DB_KEY = "awayTeamKey";
   const HOMETEAMSCORE_DB_KEY = "homeTeamScore";
   const AWAYTEAMSCORE_DB_KEY = "awayTeamScore";
   const PERIOD_DB_KEY = "period";
   const STATUS_DB_KEY = "status";
   const GAMETIM_DB_KEY = "gameTime";
-  const SEASONID_DB_KEY = "seasonId";
+  const SEASONID_DB_KEY = "seasonKey";
 
   // -- CLASS VARS
   protected static $tableName = self::GAME_TABLE_NAME;
 
-  protected static $uniqueKeys = array(self::ID_DB_KEY, self::SEASONID_DB_KEY);
-
 // -- INSTANCE VARS	
   private
-    $id,
     $date,
     $homeTeamId,
     $awayTeamId,
@@ -45,41 +50,21 @@ class Game extends DatabaseObject {
       $status,
       $gameTime,
       $seasonId) {
-    return static::createObject(
-      array(
-        self::DATE_DB_KEY => $date,
-        self::HOMETEAMID_DB_KEY => $homeTeamId,
-        self::AWAYTEAMID_DB_KEY => $awayTeamId,
-        self::HOMETEAMSCORE_DB_KEY => $homeTeamScore,
-        self::AWAYTEAMSCORE_DB_KEY => $awayTeamScore,
-        self::PERIOD_DB_KEY => $period,
-        self::STATUS_DB_KEY => $status,
-        self::GAMETIM_DB_KEY => $gameTime,
-        self::SEASONID_DB_KEY => $seasonId,
-      )
-    );    
+    $create_vars = parent::createFundamentalVars();
+    $create_vars[self::DATE_DB_KEY] = $date;
+    $create_vars[self::HOMETEAMID_DB_KEY] = $homeTeamId;
+    $create_vars[self::AWAYTEAMID_DB_KEY] = $awayTeamId;
+    $create_vars[self::HOMETEAMSCORE_DB_KEY] = $homeTeamScore;
+    $create_vars[self::AWAYTEAMSCORE_DB_KEY] = $awayTeamScore;
+    $create_vars[self::PERIOD_DB_KEY] = $period;
+    $create_vars[self::STATUS_DB_KEY] = $status;
+    $create_vars[self::GAMETIM_DB_KEY] = $gameTime;
+    $create_vars[self::SEASONID_DB_KEY] = $seasonId;
+
+    return static::createObject($create_vars);
   }
 
-  public static function fetchById($id) {
-    return static::getObjectByUniqueKey(self::ID_DB_KEY, $id);
-  }
-
-  public static function genSqlTime() {
-    return date('Y-m-d G:s:i');
-  }
-
-  protected function getPrimaryKeys() {
-    return array(self::ID_DB_KEY => $this->id);
-  }
-
-  protected function createObjectCallback($init_params) {
-    $id = mysql_insert_id();
-    $init_params[self::ID_DB_KEY] = $id;
-    return $init_params;
-  }
-
-  protected function initInstanceVars($params) {
-    $this->id = $params[self::ID_DB_KEY];	
+  protected function initAuxillaryInstanceVars($params) {
     $this->date = $params[self::DATE_DB_KEY];	
     $this->homeTeamId = $params[self::HOMETEAMID_DB_KEY];	
     $this->awayTeamId = $params[self::AWAYTEAMID_DB_KEY];	
@@ -91,9 +76,8 @@ class Game extends DatabaseObject {
     $this->seasonId = $params[self::SEASONID_DB_KEY];
   }
 
-  protected function getDbFields() {
+  protected function getAuxillaryDbFields() {
     return array(
-        self::ID_DB_KEY => $this->id,
         self::DATE_DB_KEY => $this->date,
         self::HOMETEAMID_DB_KEY => $this->homeTeamId,
         self::AWAYTEAMID_DB_KEY => $this->awayTeamId,
@@ -107,16 +91,13 @@ class Game extends DatabaseObject {
   } 
 
   // -- Getters
-  public function getId() { 
-		return $this->id;
-	}
   public function getDate() { 
 		return $this->date;
 	}
-  public function getHomeTeamId() { 
+  public function getHomeTeamKey() { 
 		return $this->homeTeamId;
 	}
-  public function getAwayTeamId() { 
+  public function getAwayTeamKey() { 
 		return $this->awayTeamId;
 	}
   public function getHomeTeamScore() { 
@@ -134,7 +115,7 @@ class Game extends DatabaseObject {
   public function getGameTim() { 
 		return $this->gameTime;
   }
-  public function getSeasonId() {
+  public function getSeasonKey() {
     return $this->seasonId;
   }
 }

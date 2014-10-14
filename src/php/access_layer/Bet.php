@@ -1,12 +1,12 @@
 <?php
 
 // -- DEPENDENCIES
-require_once(dirname(__FILE__)."/warehouse/DatabaseObject.php");
+require_once(dirname(__FILE__)."/DelphiObject.php");
 
-class Bet extends DatabaseObject {
-// -- CLASS CONSTANTS
+class Bet extends DelphiObject {
+  
+  // -- CLASS CONSTANTS
   const BET_TABLE_NAME = "Bets";
-  const ID_DB_KEY = "id";
   const GAMEID_DB_KEY = "gameId";
   const TEAMID_DB_KEY = "teamId";
   const BETTINGUSERID_DB_KEY = "bettingUserId";
@@ -18,11 +18,8 @@ class Bet extends DatabaseObject {
   // -- CLASS VARS
   protected static $tableName = self::BET_TABLE_NAME;
 
-  protected static $uniqueKeys = array(self::ID_DB_KEY);
-
 // -- INSTANCE VARS	
   private
-    $id,
     $gameId,
     $teamId,
     $bettingUserId,
@@ -52,22 +49,7 @@ class Bet extends DatabaseObject {
     ); 
   }
 
-  public static function fetchById($id) {
-    return static::getObjectByUniqueKeys(self::ID_DB_KEY, $id);
-  }
-
-  protected function getPrimaryKeys() {
-    return array(self::ID_DB_KEY => $this->id);
-  }
-
-  protected function createObjectCallback($init_params) {
-    $id = mysql_insert_id();
-    $init_params[self::ID_DB_KEY] = $id;
-    return $init_params;
-  }
-
   protected function initInstanceVars($params) {
-    $this->id = $params[self::ID_DB_KEY];	
     $this->gameId = $params[self::GAMEID_DB_KEY];	
     $this->teamId = $params[self::TEAMID_DB_KEY];	
     $this->bettingUserId = $params[self::BETTINGUSERID_DB_KEY];	
@@ -79,7 +61,6 @@ class Bet extends DatabaseObject {
 
   protected function getDbFields() {
     return array(
-        self::ID_DB_KEY => $this->id,
         self::GAMEID_DB_KEY => $this->gameId,
         self::TEAMID_DB_KEY => $this->teamId,
         self::BETTINGUSERID_DB_KEY => $this->bettingUserId,
@@ -91,10 +72,7 @@ class Bet extends DatabaseObject {
   } 
 
   // -- Getters
-  public function getId() { 
-		return $this->id;
-	}
-  public function getGameId() { 
+  public  public function getGameId() { 
 		return $this->gameId;
 	}
   public function getTeamId() { 

@@ -1,24 +1,20 @@
 <?php
 
 // -- DEPENDENCIES
-require_once(dirname(__FILE__)."/warehouse/DatabaseObject.php");
+require_once(dirname(__FILE__)."/DelphiObject.php");
 require_once(dirname(__FILE__)."/exceptions/DuplicateFriendRequestException.php");
 
-class Friend extends DatabaseObject {
+class Friend extends DelphiObject {
 // -- CLASS CONSTANTS
   const FRIEND_TABLE_NAME = "Friends";
   const REQUESTINGUSERID_DB_KEY = "requestingUserId";
   const APPROVINGUSERID_DB_KEY = "approvingUserId";
-  const ID_DB_KEY = "id";
 
   // -- CLASS VARS
   protected static $tableName = FRIEND_TABLE_NAME;
 
-  protected static $uniqueKeys = array(self::ID_DB_KEY);
-
 // -- INSTANCE VARS	
   private
-    $id,
     $requestingUserId,
     $approvingUserId;
 
@@ -80,25 +76,13 @@ class Friend extends DatabaseObject {
       . " OR " . self::APPROVINGUSERID_DB_KEY . "=" . $userId;
   }
 
-  protected function getPrimaryKeys() {
-    return array(self::ID_DB_KEY => $this->id);
-  }
-
-  protected function createObjectCallback($init_params) {
-    $id = mysql_insert_id();
-    $init_params[self::ID_DB_KEY] = $id;
-    return $init_params;
-  }
-
-  protected function initInstanceVars($params) {
-    $this->id = $params[self::ID_DB_KEY];
+  protected function initAuxillaryInstanceVars($params) {
     $this->requestingUserId = $params[self::REQUESTINGUSERID_DB_KEY];	
     $this->approvingUserId = $params[self::APPROVINGUSERID_DB_KEY];	
   }
 
-  protected function getDbFields() {
+  protected function getAuxillaryDbFields() {
     return array(
-        self::ID_DB_KEY => $this->id,
         self::REQUESTINGUSERID_DB_KEY => $this->requestingUserId,
         self::APPROVINGUSERID_DB_KEY => $this->approvingUserId,
     );
@@ -110,8 +94,5 @@ class Friend extends DatabaseObject {
 	}
   public function getApprovingUserId() { 
 		return $this->approvingUserId;
-  }
-  public function getId() {
-    return $this->id;
   }
 }

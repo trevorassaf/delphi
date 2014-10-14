@@ -24,8 +24,8 @@ abstract class FantasyFootballApi extends OutgoingApiReq {
   const PRESEASON_WEEK_MAX = 4;
   const REGULAR_SEASON_WEEK_MIN = 1;
   const REGULAR_SEASON_WEEK_MAX = 17;
-  const POST_SEASON_WEEK_MIN = 1;
-  const POST_SEASON_WEEK_MAX = 4;
+  const POST_SEASON_WEEK_MIN = 18;
+  const POST_SEASON_WEEK_MAX = 21;
 
   /**
    * Format of response.
@@ -59,6 +59,17 @@ abstract class FantasyFootballApi extends OutgoingApiReq {
       default:
         return false;  
     }
+  }
+
+  public static function genSeasonKey($week, $year) {
+    if ($week >= self::REGULAR_SEASON_WEEK_MIN && $week <= self::REGULAR_SEASON_WEEK_MAX) {
+      $suffix = self::REGULAR_SEASON_QUERY_SUFFIX;
+    } else if ($week >= self::POST_SEASON_WEEK_MIN && $week <= self::POST_SEASON_WEEK_MAX) {
+      $suffix = self::POST_SEASON_QUERY_SUFFIX;
+    } else {
+      throw new Exception("bad week num: {$week}");
+    }
+    return self::genSeasonQueryString($year, $suffix);
   }
 
   public function __construct() {

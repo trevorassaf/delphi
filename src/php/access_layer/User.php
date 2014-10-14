@@ -1,12 +1,11 @@
 <?php
 
 // -- DEPENDENCIES
-require_once(dirname(__FILE__)."/warehouse/DatabaseObject.php");
+require_once(dirname(__FILE__)."/DelphiObject.php");
 
-class User extends DatabaseObject {
+class User extends DelphiObject {
 // -- CLASS CONSTANTS
   const USER_TABLE_NAME = "Users";
-  const ID_DB_KEY = "id";
   const FBID_DB_KEY = "fbId";
   const USERNAM_DB_KEY = "username";
   const FIRSTNAME_DB_KEY = "firstName";
@@ -19,11 +18,13 @@ class User extends DatabaseObject {
   // -- CLASS VARS
   protected static $tableName = self::USER_TABLE_NAME;
 
-  protected static $uniqueKeys = array(self::ID_DB_KEY, self::USERNAM_DB_KEY, self::FBID_DB_KEY);  
+  protected static $uniqueKeys = array(
+    DelphiObject::ID_KEY,
+    self::FBID_DB_KEY,
+    self::USERNAM_DB_KEY);
 
   // -- INSTANCE VARS	
   private
-    $id,
     $fbId,
     $username,
     $firstName,
@@ -56,24 +57,22 @@ class User extends DatabaseObject {
     );
   }
 
-  public static function fetchById($id) {
-    return static::getObjectByUniqueKey(self::ID_DB_KEY, $id);
-  }
-
   public static function fetchByUsername($username) {
-    return static::getObjectByUniqueKey(self::USERNAM_DB_KEY, $username);
+    return static::getObjectByUniqueKey(self::USERNAME_DB_KEY, $username);
   }
 
   public static function fetchByFbId($fbId) {
     return static::getObjectByUniqueKey(self::FBID_DB_KEY, $fbId);
   }
 
-  protected function getPrimaryKeys() {
-    return array(static::ID_DB_KEY => $this->id);
+  protected function getUniqueKeys() {
+    $unique_keys = parent::getUniqueKeys();
+    $unique_keys[self::USERNAM_DB_KEY] = $this->username;
+    $unique_keys[self::FBID_DB_KEY] = $this->fbId;
+    return $unique_keys;
   }
 
-  protected function initInstanceVars($params) {
-    $this->id = $params[self::ID_DB_KEY];	
+  protected function initAuxillaryInstanceVars($params) {
     $this->fbId = $params[self::FBID_DB_KEY];	
     $this->username = $params[self::USERNAM_DB_KEY];	
     $this->firstName = $params[self::FIRSTNAME_DB_KEY];	
@@ -84,9 +83,8 @@ class User extends DatabaseObject {
     $this->isAdmin = $params[self::ISADMIN_DB_KEY];	
   }
 
-  protected function getDbFields() {
+  protected function getAuxillaryDbFields() {
     return array(
-        self::ID_DB_KEY => $this->id,
         self::FBID_DB_KEY => $this->fbId,
         self::USERNAM_DB_KEY => $this->username,
         self::FIRSTNAME_DB_KEY => $this->firstName,
@@ -98,16 +96,7 @@ class User extends DatabaseObject {
     );
   } 
 
-  protected function createObjectCallback($init_params) {
-    $id = mysql_insert_id();
-    $init_params[self::ID_DB_KEY] = $id;
-    return $init_params;
-  }
-
   // -- Getters
-  public function getId() { 
-		return $this->id;
-	}
   public function getFbId() { 
 		return $this->fbId;
 	}

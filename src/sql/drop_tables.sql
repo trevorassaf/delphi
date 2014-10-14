@@ -1,4 +1,6 @@
 -- Drop tables in 'Delphi' db
+DROP TABLE SeasonAdminInfo;
+
 DROP TABLE Friends;
 
 DROP TABLE UserBets;
